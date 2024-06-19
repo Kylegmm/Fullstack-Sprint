@@ -1,1 +1,16 @@
-{}
+{
+  "appName": "MyApp",
+  "version": "1.0.0",
+  "port": "4000",
+  "database": {
+    "host": "localhost",
+    "port": 5432,
+    "username": "user",
+    "password": "password",
+    "database": "myapp"
+  },
+  "logging": {
+    "level": "info",
+    "directory": "logs"
+  }
+}

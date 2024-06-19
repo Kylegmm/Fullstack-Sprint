@@ -16,7 +16,22 @@ const createFolders = () => {
 
 const createFiles = () => {
   const files = {
-    'config/default.json': JSON.stringify({}),
+    'config/default.json': JSON.stringify({
+      appName: "MyApp",
+      version: "1.0.0",
+      port: 3000,
+      database: {
+        host: "localhost",
+        port: 5432,
+        username: "user",
+        password: "password",
+        database: "myapp"
+      },
+      logging: {
+        level: "info",
+        directory: "logs"
+      }
+    }, null, 2),
     'config/help.txt': 'Help content goes here...',
   };
   for (const [filePath, content] of Object.entries(files)) {
@@ -66,21 +81,46 @@ const init = (option) => {
 
 // Configuration commands
 const showConfig = () => {
-  const config = JSON.parse(fs.readFileSync('config/default.json'));
-  console.log(config);
+  const configPath = 'config/default.json';
+  if (fs.existsSync(configPath)) {
+    const config = JSON.parse(fs.readFileSync(configPath));
+    console.log('Current Configuration:', config);
+  } else {
+    console.log('Configuration file not found.');
+  }
 };
 
 const resetConfig = () => {
-  const defaultConfig = {};
-  fs.writeFileSync('config/default.json', JSON.stringify(defaultConfig));
+  const defaultConfig = {
+    appName: "MyApp",
+    version: "1.0.0",
+    port: 3000,
+    database: {
+      host: "localhost",
+      port: 5432,
+      username: "user",
+      password: "password",
+      database: "myapp"
+    },
+    logging: {
+      level: "info",
+      directory: "logs"
+    }
+  };
+  fs.writeFileSync('config/default.json', JSON.stringify(defaultConfig, null, 2));
   console.log('Configuration reset to default.');
 };
 
-const setConfig = (option, value) => {
-  const config = JSON.parse(fs.readFileSync('config/default.json'));
-  config[option] = value;
-  fs.writeFileSync('config/default.json', JSON.stringify(config));
-  console.log(`Configuration option ${option} set to ${value}.`);
+const setConfig = (key, value) => {
+  const configPath = 'config/default.json';
+  if (fs.existsSync(configPath)) {
+    const config = JSON.parse(fs.readFileSync(configPath));
+    config[key] = value;
+    fs.writeFileSync(configPath, JSON.stringify(config, null, 2));
+    console.log(`Configuration option ${key} set to ${value}.`);
+  } else {
+    console.log('Configuration file not found.');
+  }
 };
 
 const config = (option, value) => {
@@ -108,7 +148,7 @@ const generateToken = (username) => {
     data = JSON.parse(fs.readFileSync('data/tokens.json'));
   }
   data[username] = token;
-  fs.writeFileSync('data/tokens.json', JSON.stringify(data));
+  fs.writeFileSync('data/tokens.json', JSON.stringify(data, null, 2));
   console.log(`Token for ${username}: ${token}`);
 };
 
@@ -119,7 +159,7 @@ const updateUser = (field, username, value) => {
   }
   if (data[username]) {
     data[username][field] = value;
-    fs.writeFileSync('data/tokens.json', JSON.stringify(data));
+    fs.writeFileSync('data/tokens.json', JSON.stringify(data, null, 2));
     console.log(`${field} for ${username} updated to ${value}.`);
   } else {
     console.log(`User ${username} not found.`);
