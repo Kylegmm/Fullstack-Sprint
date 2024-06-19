@@ -24,6 +24,22 @@ const createFiles = () => {
   }
 };
 
+const checkStatus = () => {
+  const directories = ['config', 'data', 'logs', 'public', 'routes', 'views'];
+  let statusReport = {};
+
+  directories.forEach(dir => {
+    statusReport[dir] = fs.existsSync(dir) ? 'Exists' : 'Missing';
+  });
+
+  const files = ['config/default.json', 'config/help.txt'];
+  files.forEach(file => {
+    statusReport[file] = fs.existsSync(file) ? 'Exists' : 'Missing';
+  });
+
+  console.log('Status Report:', statusReport);
+};
+
 const init = (option) => {
   switch (option) {
     case '--all':
@@ -38,6 +54,9 @@ const init = (option) => {
     case '--cat':
       createFiles();
       console.log('Configuration and help files created.');
+      break;
+    case '--status':
+      checkStatus();
       break;
     default:
       console.log('Invalid option for init command.');
