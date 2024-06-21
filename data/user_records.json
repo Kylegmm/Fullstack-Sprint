@@ -16,5 +16,11 @@
     "email": "kmm@home.com",
     "phone": "7777777777",
     "token": "dGVzdHVzZS0xNzE4OTE3NjIxMjgw"
+  },
+  {
+    "username": "hunter",
+    "email": "h@home.com",
+    "phone": "4155551212",
+    "token": "aHVudGVyLTE3MTg5MzA0OTk1MDU="
   }
 ]
