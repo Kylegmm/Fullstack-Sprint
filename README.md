@@ -14,25 +14,45 @@ Directory Structure
 The project's directory structure is as follows:
 
 /Fullstack-Sprint
+
 ├── config
+
 │   └── config.json
+
 ├── data
+
 │   └── user_records.json
+
 ├── logs
+
 │   └── app.log
+
 ├── public
+
 │   └── style.css
+
 ├── server
+
 │   ├── views
+
 │   │   ├── index.ejs
+
 │   │   ├── token.ejs
+
 │   │   ├── update.ejs
+
 │   │   └── count.ejs
+
 │   └── server.js
+
 ├── utils
+
 │   └── token.js
+
 ├── cli.js
+
 ├── help.txt
+
 └── package.json
 
 Installation
