@@ -1,4 +1,6 @@
 // File: cli.js
+global.DEBUG = true; 
+
 const fs = require('fs');
 const path = require('path');
 const { generateToken } = require('./utils/token');
@@ -8,7 +10,9 @@ const USER_RECORDS_PATH = path.join(__dirname, 'data/user_records.json');
 const LOG_PATH = path.join(__dirname, 'logs/app.log');
 const HELP_FILE_PATH = path.join(__dirname, './root/help.txt');
 
+// Function to show help text
 function showHelp() {
+    if (global.DEBUG) console.log('cli.showHelp()');
     try {
         const helpText = fs.readFileSync(HELP_FILE_PATH, 'utf-8');
         console.log(helpText);
@@ -17,7 +21,9 @@ function showHelp() {
     }
 }
 
+// Function to initialize application
 function initApp(option) {
+    if (global.DEBUG) console.log(`cli.initApp(${option})`);
     switch (option) {
         case '--help':
             console.log(`
@@ -47,7 +53,9 @@ myapp init --cat                           creates the config file with default 
     }
 }
 
+// Function to create folder structure
 function createFolderStructure() {
+    if (global.DEBUG) console.log('cli.createFolderStructure()');
     if (!fs.existsSync(path.dirname(CONFIG_PATH))) {
         fs.mkdirSync(path.dirname(CONFIG_PATH), { recursive: true });
     }
@@ -59,7 +67,9 @@ function createFolderStructure() {
     }
 }
 
+// Function to create config file
 function createConfigFile() {
+    if (global.DEBUG) console.log('cli.createConfigFile()');
     if (!fs.existsSync(CONFIG_PATH)) {
         fs.writeFileSync(CONFIG_PATH, JSON.stringify({ app: 'myApp', version: '1.0' }));
     }
@@ -68,7 +78,9 @@ function createConfigFile() {
     }
 }
 
+// Function to handle config commands
 function config(option, key, value) {
+    if (global.DEBUG) console.log(`cli.config(${option}, ${key}, ${value})`);
     switch (option) {
         case '--help':
             console.log(`
@@ -98,25 +110,33 @@ myapp config --set <option> <value>        sets a specific config setting
     }
 }
 
+// Function to show config
 function showConfig() {
+    if (global.DEBUG) console.log('cli.showConfig()');
     const config = JSON.parse(fs.readFileSync(CONFIG_PATH, 'utf-8'));
     console.log(config);
     logAction('Configuration viewed.');
 }
 
+// Function to reset config
 function resetConfig() {
+    if (global.DEBUG) console.log('cli.resetConfig()');
     fs.writeFileSync(CONFIG_PATH, JSON.stringify({ app: 'myApp', version: '1.0' }));
     logAction('Configuration reset.');
 }
 
+// Function to set config
 function setConfig(key, value) {
+    if (global.DEBUG) console.log(`cli.setConfig(${key}, ${value})`);
     const config = JSON.parse(fs.readFileSync(CONFIG_PATH, 'utf-8'));
     config[key] = value;
     fs.writeFileSync(CONFIG_PATH, JSON.stringify(config, null, 2));
     logAction(`Configuration updated: ${key} = ${value}`);
 }
 
+// Function to handle token commands
 function token(option, ...args) {
+    if (global.DEBUG) console.log(`cli.token(${option}, ${args.join(', ')})`);
     switch (option) {
         case '--help':
             console.log(`
@@ -163,13 +183,17 @@ myapp token --search p <phone>             fetches a token for a given phone num
     }
 }
 
+// Function to count tokens
 function countTokens() {
+    if (global.DEBUG) console.log('cli.countTokens()');
     const records = JSON.parse(fs.readFileSync(USER_RECORDS_PATH, 'utf-8'));
     console.log(`Total tokens created: ${records.length}`);
     logAction('Token count displayed.');
 }
 
+// Function to add user record
 function addUserRecord(username, email, phone) {
+    if (global.DEBUG) console.log(`cli.addUserRecord(${username}, ${email}, ${phone})`);
     const records = JSON.parse(fs.readFileSync(USER_RECORDS_PATH, 'utf-8'));
     const { token, creationDate, expirationDate } = generateToken(username);
     const userIndex = records.findIndex(user => user.username === username);
@@ -180,9 +204,15 @@ function addUserRecord(username, email, phone) {
     }
     fs.writeFileSync(USER_RECORDS_PATH, JSON.stringify(records, null, 2));
     logAction(`User record added/updated for ${username}.`);
+
+    if (global.DEBUG) {
+        console.debug(`Updated user record: ${JSON.stringify(records[userIndex] || records[records.length - 1])}`);
+    }
 }
 
+// Function to search user record
 function searchUserRecord(type, query) {
+    if (global.DEBUG) console.log(`cli.searchUserRecord(${type}, ${query})`);
     const records = JSON.parse(fs.readFileSync(USER_RECORDS_PATH, 'utf-8'));
     let results;
     switch (type) {
@@ -203,7 +233,9 @@ function searchUserRecord(type, query) {
     logAction(`User record searched for ${type}: ${query}.`);
 }
 
+// Function to update user email
 function updateUserEmail(username, email) {
+    if (global.DEBUG) console.log(`cli.updateUserEmail(${username}, ${email})`);
     const records = JSON.parse(fs.readFileSync(USER_RECORDS_PATH, 'utf-8'));
     const userIndex = records.findIndex(user => user.username === username);
     if (userIndex !== -1) {
@@ -215,7 +247,9 @@ function updateUserEmail(username, email) {
     }
 }
 
+// Function to update user phone
 function updateUserPhone(username, phone) {
+    if (global.DEBUG) console.log(`cli.updateUserPhone(${username}, ${phone})`);
     const records = JSON.parse(fs.readFileSync(USER_RECORDS_PATH, 'utf-8'));
     const userIndex = records.findIndex(user => user.username === username);
     if (userIndex !== -1) {
@@ -227,12 +261,19 @@ function updateUserPhone(username, phone) {
     }
 }
 
+// Function to log actions
 function logAction(action) {
+    if (global.DEBUG) console.log(`cli.logAction(${action})`);
     const timestamp = new Date().toISOString();
     fs.appendFileSync(LOG_PATH, `${timestamp} - ${action}\n`);
+    if (global.DEBUG) {
+        console.debug(`DEBUG: ${action}`);
+    }
 }
 
 const [,, command, option, ...args] = process.argv;
+
+if (global.DEBUG) console.log(`cli.main(${command}, ${option}, ${args.join(', ')})`);
 
 switch (command) {
     case '--help':
