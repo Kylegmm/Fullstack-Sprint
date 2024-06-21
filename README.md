@@ -55,16 +55,6 @@ The project's directory structure is as follows:
 
 └── package.json
 
-Installation
-
-1. Clone the repository:
-  
-   git clone https://github.com/yourusername/myapp.git
-   cd myapp
- 
-2. Install the dependencies:
-  
-   npm install
 
 Usage
 
