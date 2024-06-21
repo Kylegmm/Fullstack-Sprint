@@ -23,9 +23,10 @@ app.get('/', (req, res) => {
 
 app.post('/generate-token', (req, res) => {
     const { username } = req.body;
-    const token = generateToken(username);
-    addUserRecord(username, null, null, token);
-    res.render('token', { username, token });
+    const { token, creationDate, expirationDate } = generateToken(username);
+    addUserRecord(username, null, null, token, creationDate, expirationDate);
+    const isExpired = isTokenExpired(expirationDate);
+    res.render('token', { username, token, creationDate, expirationDate, isExpired });
     logAction(`Token generated for ${username} via web.`);
 });
 
@@ -47,15 +48,17 @@ app.get('/token-count', (req, res) => {
     logAction('Token count displayed.');
 });
 
-function addUserRecord(username, email, phone, token) {
+function addUserRecord(username, email, phone, token, creationDate, expirationDate) {
     const records = JSON.parse(fs.readFileSync(USER_RECORDS_PATH, 'utf-8'));
     const userIndex = records.findIndex(user => user.username === username);
     if (userIndex !== -1) {
         if (email) records[userIndex].email = email;
         if (phone) records[userIndex].phone = phone;
         if (token) records[userIndex].token = token;
+        records[userIndex].creationDate = creationDate;
+        records[userIndex].expirationDate = expirationDate;
     } else {
-        records.push({ username, email, phone, token });
+        records.push({ username, email, phone, token, creationDate, expirationDate });
     }
     fs.writeFileSync(USER_RECORDS_PATH, JSON.stringify(records, null, 2));
     logAction(`User record added/updated for ${username}.`);
@@ -83,6 +86,12 @@ function updateUserPhone(username, phone) {
     } else {
         console.log(`User ${username} not found.`);
     }
+}
+
+function isTokenExpired(expirationDate) {
+    const tokenDate = new Date(expirationDate);
+    const currentDate = new Date();
+    return currentDate > tokenDate;
 }
 
 app.listen(PORT, () => {

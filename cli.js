@@ -171,12 +171,12 @@ function countTokens() {
 
 function addUserRecord(username, email, phone) {
     const records = JSON.parse(fs.readFileSync(USER_RECORDS_PATH, 'utf-8'));
-    const token = generateToken(username);
+    const { token, creationDate, expirationDate } = generateToken(username);
     const userIndex = records.findIndex(user => user.username === username);
     if (userIndex !== -1) {
-        records[userIndex] = { username, email, phone, token };
+        records[userIndex] = { username, email, phone, token, creationDate, expirationDate };
     } else {
-        records.push({ username, email, phone, token });
+        records.push({ username, email, phone, token, creationDate, expirationDate });
     }
     fs.writeFileSync(USER_RECORDS_PATH, JSON.stringify(records, null, 2));
     logAction(`User record added/updated for ${username}.`);
