@@ -16,6 +16,9 @@
     <div class="container">
         <h1>Token Generated</h1>
         <p>Token for <strong><%= username %></strong>: <span style="color:#ff4500;"><%= token %></span></p>
+        <p>Creation Date: <%= creationDate %></p>
+        <p>Expiration Date: <%= expirationDate %></p>
+        <p>Status: <%= isExpired ? 'Expired' : 'Active' %></p>
         <button onclick="window.location.href='/'">Return to Home</button>
     </div>
     <footer>
