@@ -1,4 +1,11 @@
 // File: cli.js
+/* TokenWebCLI is a full-stack JavaScript application that includes a web server and a command-line interface (CLI) for managing user tokens. 
+The project uses Node.js and Express to serve a web interface and handle various token-related operations. 
+The CLI provides commands to initialize the application, configure settings, and manage user tokens.
+- Project created by Team 2: Kyle March-MacCuish, Lisa Miller, and Steve Sharpe
+-Creation date: 06-17-2024
+-Last update: 06-26-2024*/
+
 global.DEBUG = true; 
 
 const fs = require('fs');
