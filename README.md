@@ -137,3 +137,8 @@ Feel free to submit issues and pull requests. For major changes, please open an 
 ## License
 
 This project is licensed under the MIT License.
+
+## Semester3 Sprint Team
+
+ Project created by Team 2 of Keyin College: Kyle March-MacCuish, Lisa Miller, and Steve Sharpe
+ 
